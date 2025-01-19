@@ -1,0 +1,108 @@
+import json
+import os
+from datetime import datetime
+
+# Function to load existing expenses from the file
+def load_expenses(filename="expenses.json"):
+    if os.path.exists(filename):
+        with open(filename, "r") as file:
+            return json.load(file)
+    return []
+
+# Function to save expenses to the file
+def save_expenses(expenses, filename="expenses.json"):
+    with open(filename, "w") as file:
+        json.dump(expenses, file, indent=4)
+
+# Function to add an expense
+def add_expense(expenses):
+    amount = float(input("Enter the amount spent: "))
+    category = input("Enter the expense category (e.g., food, transport, entertainment): ")
+    description = input("Enter a short description: ")
+    date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    expense = {
+        "amount": amount,
+        "category": category,
+        "description": description,
+        "date": date
+    }
+    expenses.append(expense)
+    save_expenses(expenses)
+    print("Expense added successfully.")
+
+# Function to view all expenses
+def view_expenses(expenses):
+    if not expenses:
+        print("No expenses recorded.")
+    else:
+        for i, expense in enumerate(expenses, 1):
+            print(f"{i}. {expense['amount']} - {expense['category']} - {expense['description']} - {expense['date']}")
+
+# Function to view a summary of expenses by category
+def expense_summary(expenses):
+    category_summary = {}
+    for expense in expenses:
+        category = expense["category"]
+        amount = expense["amount"]
+        if category in category_summary:
+            category_summary[category] += amount
+        else:
+            category_summary[category] = amount
+
+    if category_summary:
+        for category, total in category_summary.items():
+            print(f"{category}: {total}")
+    else:
+        print("No expenses recorded.")
+
+# Function to view the total of all expenses
+def total_expenses(expenses):
+    total = sum(expense["amount"] for expense in expenses)
+    print(f"Total Expenses: {total}")
+
+# Main function to run the app
+def main():
+    expenses = load_expenses()
+    while True:
+        print("\nExpense Tracker")
+        print("1. Add Expense")
+        print("2. View Expenses")
+        print("3. View Expense Summary by Category")
+        print("4. View Total Expenses")
+        print("5. Exit")
+
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            add_expense(expenses)
+        elif choice == "2":
+            view_expenses(expenses)
+        elif choice == "3":
+            expense_summary(expenses)
+        elif choice == "4":
+            total_expenses(expenses)
+        elif choice == "5":
+            print("Exiting the app.")
+            break
+        else:
+            print("Invalid choice, please try again.")
+
+if __name__ == "__main__":
+    main()
+
+Expense Tracker
+1. Add Expense
+2. View Expenses
+3. View Expense Summary by Category
+4. View Total Expenses
+5. Exit
+Enter your choice: 2
+No expenses recorded.
+
+Expense Tracker
+1. Add Expense
+2. View Expenses
+3. View Expense Summary by Category
+4. View Total Expenses
+5. Exit
